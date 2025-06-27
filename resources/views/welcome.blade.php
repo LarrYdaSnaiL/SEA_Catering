@@ -1,4 +1,4 @@
-@extends('app')
+@extends('layouts.app')
 
 @section('title', 'SEA Catering - Healthy Meals, Anytime, Anywhere')
 
@@ -18,8 +18,8 @@
             Your journey to a healthier lifestyle, made simple and delicious. Customizable meals delivered across Indonesia.
         </p>
         <div class="mt-10">
-            <a href="{{ url('/menu') }}" class="inline-block bg-emerald-500 text-white font-bold rounded-full px-10 py-4 text-lg hover:bg-emerald-600 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                View Menu
+            <a href="{{ url('/subscription') }}" class="inline-block bg-emerald-500 text-white font-bold rounded-full px-10 py-4 text-lg hover:bg-emerald-600 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                Start Your Plan
             </a>
         </div>
     </div>
@@ -106,7 +106,7 @@
         </div>
         <div class="mt-12 max-w-4xl mx-auto relative">
             <div id="testimonial-carousel" class="overflow-hidden">
-                {{-- Testimonials will be injected by JS --}}
+                {{-- JS injects testimonials here. This part is now controlled by the layout --}}
             </div>
             <button id="prev-testimonial-btn" class="absolute top-1/2 -left-4 md:-left-12 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md text-emerald-500 hover:bg-gray-100 transition">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,13 +130,11 @@
 <!-- Testimonial Submission Modal -->
 <div id="testimonial-submission-modal" class="hidden fixed inset-0 z-[100] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <!-- Background overlay -->
         <div id="submission-modal-overlay" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-
-        <!-- Modal panel -->
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
         <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-            <form id="testimonial-form" action="#" method="POST">
+            <form id="testimonial-form" action="{{ route('testimonials.store') }}" method="POST">
+                @csrf
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
@@ -144,7 +142,7 @@
                             <div class="mt-4 space-y-4">
                                 <div>
                                     <label for="customer_name" class="sr-only">Your Name</label>
-                                    <input type="text" name="customer_name" id="customer_name" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm p-2" placeholder="Your Name">
+                                    <input type="text" name="customer_name" id="customer_name" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" placeholder="Your Name">
                                 </div>
                                 <div>
                                     <label for="review_message" class="sr-only">Your Review</label>
@@ -154,7 +152,7 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Your Rating</label>
                                     <div class="flex items-center" id="star-rating">
                                         @for ($i = 1; $i <= 5; $i++)
-                                            <svg class="star w-8 h-8 text-gray-300 cursor-pointer" data-rating="{{ $i }}" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <svg class="star w-8 h-8 text-gray-300 cursor-pointer" data-rating="{{ $i }}" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                                             @endfor
                                             <input type="hidden" name="rating" class="rating-value" id="rating-value" value="0" required>
@@ -176,4 +174,7 @@
         </div>
     </div>
 </div>
+<script>
+    window.testimonials = @json($testimonials);
+</script>
 @endsection

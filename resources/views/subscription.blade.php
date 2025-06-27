@@ -1,4 +1,4 @@
-@extends('app')
+@extends('layouts.app')
 
 @section('title', 'Subscribe to a Meal Plan - SEA Catering')
 
@@ -15,7 +15,7 @@
         </div>
 
         <div class="mt-12 bg-white rounded-2xl shadow-xl">
-            <form id="subscription-form" action="#" method="POST" class="p-8">
+            <form id="subscription-form" action="{{ route('subscription.store') }}" method="POST" class="p-8">
                 @csrf
                 <div class="space-y-10">
                     <!-- Step 1: Personal Details -->
@@ -24,11 +24,19 @@
                         <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name <span class="text-red-500">*</span></label>
-                                <input type="text" name="full_name" id="full_name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm p-2" placeholder="Noel A.">
+                                @auth
+                                <input type="text" name="full_name" id="full_name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-100 cursor-not-allowed sm:text-sm p-2" value="{{ Auth::user()->name }}" readonly>
+                                @else
+                                <input type="text" name="full_name" id="full_name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm p-2" placeholder="e.g. Noel A.">
+                                @endauth
                             </div>
                             <div>
                                 <label for="phone_number" class="block text-sm font-medium text-gray-700">Active Phone Number <span class="text-red-500">*</span></label>
-                                <input type="tel" name="phone_number" id="phone_number" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm p-2" placeholder="08123456789">
+                                @if(Auth::user()->phone_number)
+                                <input type="tel" name="phone_number" id="phone_number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-100 cursor-not-allowed sm:text-sm p-2" value="{{ Auth::user()->phone_number }}" readonly>
+                                @else
+                                <input type="tel" name="phone_number" id="phone_number" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm p-2" placeholder="Enter your phone number">
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -101,13 +109,19 @@
                 <!-- Total Calculation & Submission -->
                 <div class="mt-10 pt-8 border-t-2 border-dashed border-gray-200 sm:flex items-center justify-between">
                     <div class="text-center sm:text-left">
-                        <p class="text-sm font-medium text-gray-500">Estimated Weekly Total:</p>
+                        <p class="text-sm font-medium text-gray-500">Estimated Monthly Total:</p>
                         <p id="total-price" class="text-4xl font-extrabold text-emerald-600">Rp0,00</p>
                     </div>
                     <div class="mt-6 sm:mt-0 sm:ml-6">
+                        @if(Auth::check() && Auth::user()->is_admin)
+                        <button type="button" disabled title="Admins cannot create subscriptions." class="w-full md:w-auto bg-gray-400 text-white font-bold rounded-lg px-12 py-4 cursor-not-allowed">
+                            Admins Cannot Subscribe
+                        </button>
+                        @else
                         <button type="submit" class="w-full md:w-auto bg-emerald-600 text-white font-bold rounded-lg px-12 py-4 hover:bg-emerald-700 transition duration-300 shadow-lg transform hover:scale-105">
                             Subscribe Now
                         </button>
+                        @endif
                     </div>
                 </div>
             </form>
