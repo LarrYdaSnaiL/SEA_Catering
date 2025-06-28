@@ -7,9 +7,13 @@ use App\Models\Subscription;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
+    /**
+     * Display the admin dashboard with key metrics and user list.
+     */
     public function index(Request $request)
     {
         // Set default date range to the last 30 days
@@ -36,13 +40,13 @@ class AdminController extends Controller
         // 3. Reactivations in range
         $reactivations = Subscription::whereBetween('created_at', [$startDate, $endDate])
             ->whereHas('user', function ($query) {
-                $query->whereHas('subscriptions', function ($q) {
+                $query->whereHas('subscriptions', function($q){
                     $q->where('status', 'cancelled');
                 });
             })
             ->distinct('user_id')
             ->count();
-
+        
         // 4. Subscription Growth (Total Active)
         $subscriptionGrowth = Subscription::where('status', 'active')->count();
 
@@ -57,6 +61,9 @@ class AdminController extends Controller
             return Carbon::parse($date)->format('M d');
         });
         $chartValues = $chartData->pluck('count');
+        
+        // Fetch all users except the currently logged-in admin
+        $users = User::where('id', '!=', Auth::id())->get();
 
         return view('dashboard.admin', [
             'new_subscriptions' => $newSubscriptions,
@@ -67,6 +74,7 @@ class AdminController extends Controller
             'end_date' => $endDate->toDateString(),
             'chartLabels' => $chartLabels,
             'chartValues' => $chartValues,
+            'users' => $users,
         ]);
     }
 }

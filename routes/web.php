@@ -6,6 +6,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserManagementController;
 
 // Homepage Route (dengan controller)
 Route::get('/', [TestimonialController::class, 'homepage'])->name('home');
@@ -47,4 +48,9 @@ Route::middleware('auth')->group(function () {
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+
+    Route::get('/users/{user}/subscriptions', [UserManagementController::class, 'showSubscriptions'])->name('users.subscriptions');
+    Route::patch('/users/{user}/promote', [UserManagementController::class, 'promote'])->name('users.promote');
+    Route::patch('/users/{user}/demote', [UserManagementController::class, 'demote'])->name('users.demote');
+    Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
 });

@@ -20,10 +20,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@seacatering.com',
             'phone_number' => '081200001111',
             'password' => Hash::make('admin123'),
-            'is_admin' => true, // Set the user as an admin
+            'is_admin' => true,
         ]);
 
-        // You can also create some regular users for testing
-        User::factory(10)->create();
     }
 }
