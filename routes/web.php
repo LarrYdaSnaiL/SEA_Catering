@@ -53,4 +53,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/users/{user}/promote', [UserManagementController::class, 'promote'])->name('users.promote');
     Route::patch('/users/{user}/demote', [UserManagementController::class, 'demote'])->name('users.demote');
     Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
+
+    Route::patch('/subscriptions/{subscription}/pause', [UserManagementController::class, 'pauseSubscription'])->name('subscriptions.pause');
+    Route::patch('/subscriptions/{subscription}/resume', [UserManagementController::class, 'resumeSubscription'])->name('subscriptions.resume');
+    Route::delete('/subscriptions/{subscription}/cancel', [UserManagementController::class, 'cancelSubscription'])->name('subscriptions.cancel');
 });

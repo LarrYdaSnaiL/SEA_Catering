@@ -54,14 +54,14 @@
                     <div class="mt-6 flex items-center space-x-4">
                         @if($sub->status === 'active')
                         <!-- Pause Form -->
-                        <form action="{{ route('subscription.pause', $sub) }}" method="POST">
+                        <form action="{{ route('admin.subscriptions.pause', $sub) }}" method="POST">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="bg-yellow-400 text-yellow-800 font-bold py-2 px-4 rounded-lg hover:bg-yellow-500">Pause Subscription</button>
                         </form>
                         @elseif($sub->status === 'paused')
                         <!-- Resume Form -->
-                        <form action="{{ route('subscription.resume', $sub) }}" method="POST">
+                        <form action="{{ route('admin.subscriptions.resume', $sub) }}" method="POST">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600">Resume Subscription</button>
@@ -70,7 +70,7 @@
 
                         @if($sub->status !== 'cancelled')
                         <!-- Cancel Form -->
-                        <form action="{{ route('subscription.destroy', $sub) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this user\'s subscription?');">
+                        <form action="{{ route('admin.subscriptions.cancel', $sub) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this user\'s subscription?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600">Cancel Subscription</button>

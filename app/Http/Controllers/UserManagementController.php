@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Subscription; // Import Subscription model
 use Illuminate\Support\Facades\Auth;
 
 class UserManagementController extends Controller
 {
-    /**
-     * Display the subscriptions for a specific user.
-     */
     public function showSubscriptions(User $user)
     {
         return view('dashboard.user_subscriptions', [
@@ -18,18 +16,12 @@ class UserManagementController extends Controller
         ]);
     }
 
-    /**
-     * Promote a user to admin.
-     */
     public function promote(User $user)
     {
         $user->update(['is_admin' => true]);
         return back()->with('success', 'User has been promoted to admin.');
     }
 
-    /**
-     * Demote a user from admin.
-     */
     public function demote(User $user)
     {
         if (Auth::id() === $user->id) {
@@ -39,9 +31,6 @@ class UserManagementController extends Controller
         return back()->with('success', 'User has been demoted.');
     }
 
-    /**
-     * Delete a user.
-     */
     public function destroy(User $user)
     {
         if (Auth::id() === $user->id) {
@@ -52,5 +41,27 @@ class UserManagementController extends Controller
         $user->delete();
 
         return back()->with('success', 'User has been deleted successfully.');
+    }
+    
+    // New methods for managing subscriptions
+    public function pauseSubscription(Subscription $subscription)
+    {
+        $subscription->update(['status' => 'paused']);
+        return back()->with('success', "Subscription for {$subscription->user->name} has been paused.");
+    }
+    
+    public function resumeSubscription(Subscription $subscription)
+    {
+        $subscription->update(['status' => 'active']);
+        return back()->with('success', "Subscription for {$subscription->user->name} has been resumed.");
+    }
+
+    public function cancelSubscription(Subscription $subscription)
+    {
+        $subscription->update([
+            'status' => 'cancelled',
+            'cancelled_at' => now()
+        ]);
+        return back()->with('success', "Subscription for {$subscription->user->name} has been cancelled.");
     }
 }
