@@ -60,10 +60,11 @@ php artisan key:generate
 
 ```
 
-### 4. Database Migration and Seeding
+### 4. Database Creation, Migration and Seeding
 Run the database migrations to create all the necessary tables. The --seed flag will also run the database seeder, which will automatically create the default admin account.
 
 ```
+php artisan db:create
 php artisan migrate:fresh --seed
 
 ```
