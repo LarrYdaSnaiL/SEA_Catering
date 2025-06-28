@@ -120,14 +120,21 @@
             </button>
         </div>
         <div class="mt-10 text-center">
-            <button id="open-testimonial-modal-btn" type="button" class="inline-block bg-emerald-600 text-white font-bold rounded-full px-8 py-3 hover:bg-emerald-700 transition-transform duration-300 hover:scale-105 shadow-lg">
-                Rate Our Service
-            </button>
+                @auth
+                    <button id="open-testimonial-modal-btn" type="button" class="inline-block bg-emerald-600 text-white font-bold rounded-full px-8 py-3 hover:bg-emerald-700 transition-transform duration-300 hover:scale-105 shadow-lg">
+                        Rate Our Service
+                    </button>
+                @else
+                    <a href="{{ route('login') }}" class="inline-block bg-emerald-600 text-white font-bold rounded-full px-8 py-3 hover:bg-emerald-700 transition-transform duration-300 hover:scale-105 shadow-lg">
+                        Login to Rate Our Service
+                    </a>
+                @endguest
         </div>
     </div>
 </section>
 
 <!-- Testimonial Submission Modal -->
+@auth
 <div id="testimonial-submission-modal" class="hidden fixed inset-0 z-[100] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div id="submission-modal-overlay" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
@@ -142,7 +149,7 @@
                             <div class="mt-4 space-y-4">
                                 <div>
                                     <label for="customer_name" class="sr-only">Your Name</label>
-                                    <input type="text" name="customer_name" id="customer_name" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" placeholder="Your Name">
+                                    <input type="text" name="customer_name" id="customer_name" required class="block w-full border-gray-300 rounded-md cursor-not-allowed shadow-sm focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm" placeholder="Your Name" value="{{ Auth::user()->name }}" readonly>
                                 </div>
                                 <div>
                                     <label for="review_message" class="sr-only">Your Review</label>
@@ -174,6 +181,7 @@
         </div>
     </div>
 </div>
+@endauth
 <script>
     window.testimonials = @json($testimonials);
 </script>
