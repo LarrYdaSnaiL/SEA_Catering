@@ -14,7 +14,13 @@ class SubscriptionController extends Controller
      */
     public function index()
     {
-        $subscriptions = Auth::user()->subscriptions()->latest()->get();
+        $user = Auth::user();
+
+        $subscriptions = $user->subscriptions()->latest()->get();
+
+        if ($user->is_admin) {
+            return redirect()->route('admin.dashboard');
+        }
 
         return view('dashboard.user', ['subscriptions' => $subscriptions]);
     }

@@ -379,6 +379,60 @@
                 });
             }
 
+            // --- Details Modal Logic ---
+            const mealDetailsModal = document.getElementById('details-modal');
+            if (mealDetailsModal) {
+                const detailButtons = document.querySelectorAll('.details-btn');
+                const closeModalBtn = mealDetailsModal.querySelector('#close-modal-btn');
+                const cancelModalBtn = mealDetailsModal.querySelector('#modal-cancel-btn');
+                const modalOverlay = mealDetailsModal.querySelector('#modal-overlay');
+
+                const openModal = (data) => {
+                    if (!data) return;
+                    mealDetailsModal.querySelector('#modal-plan-image').src = data.image;
+                    mealDetailsModal.querySelector('#modal-plan-name').textContent = data.name;
+                    mealDetailsModal.querySelector('#modal-plan-description').textContent = data.description;
+                    mealDetailsModal.querySelector('#modal-plan-focus').textContent = data.focus;
+                    mealDetailsModal.querySelector('#modal-plan-best-for').textContent = data.bestFor;
+
+                    const menuList = mealDetailsModal.querySelector('#modal-plan-menu');
+                    menuList.innerHTML = '';
+                    const menuItems = JSON.parse(data.menu);
+                    menuItems.forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item;
+                        menuList.appendChild(li);
+                    });
+
+                    const planSlug = data.name.toLowerCase().replace(/\s+/g, '-');
+                    mealDetailsModal.querySelector('#modal-subscribe-link').href = `{{ url('/subscription') }}?plan=${planSlug}`;
+
+                    mealDetailsModal.classList.remove('hidden');
+                };
+
+                const closeModal = () => {
+                    mealDetailsModal.classList.add('hidden');
+                };
+
+                detailButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const planData = {
+                            name: button.dataset.planName,
+                            image: button.dataset.planImage,
+                            description: button.dataset.planDescription,
+                            menu: button.dataset.planMenu,
+                            focus: button.dataset.planFocus,
+                            bestFor: button.dataset.planBestFor,
+                        };
+                        openModal(planData);
+                    });
+                });
+
+                if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+                if (cancelModalBtn) cancelModalBtn.addEventListener('click', closeModal);
+                if (modalOverlay) modalOverlay.addEventListener('click', closeModal);
+            }
+
             // Initialize Date Range Picker
             if (document.getElementById('start_date')) {
                 flatpickr("#start_date", {
